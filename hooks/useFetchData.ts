@@ -61,7 +61,7 @@ const fetchAllMeals = async (letter: string) => {
         );
         const data = await response.json();
         // if (data.meals) {
-        //     setList(data.meals); // Slice the 'meals' array before setting it in state
+        //     setList(data.meals);
         // }
         return data.meals;
     } catch (error) {

@@ -1,6 +1,7 @@
 import HistoryElement from "@/components/HistoryElement/HistoryElement";
 import RecipeCard from "@/components/RecipeCard/RecipeCard";
-import React from "react";
+import { Meal } from "@/hooks/useFetchData";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -50,6 +51,40 @@ const styles = StyleSheet.create({
 });
 
 export default function HomeScreen() {
+  const [list, setList] = useState<Meal[] | null>(null);
+
+  const [searchText, setSearchText] = useState("");
+
+  const handleTextChange = (text: string) => {
+    setSearchText(text);
+    fetchAllMeals(text.charAt(0));
+    filterMeals(searchText);
+  };
+
+  const fetchAllMeals = async (letter: string) => {
+    try {
+      const response = await fetch(
+        "https://www.themealdb.com/api/json/v1/1/search.php?f=" + letter
+      );
+      const data = await response.json();
+      if (data.meals) {
+        setList(data.meals);
+      }
+      return data.meals;
+    } catch (error) {
+      console.error("Error fetching meals:", error);
+    }
+  };
+
+  const filterMeals = async (text: string) => {
+    setList(
+      (prevList) =>
+        prevList?.filter((meal) =>
+          meal.strMeal.toLowerCase().includes(text.toLowerCase())
+        ) || null
+    );
+  };
+
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -61,6 +96,7 @@ export default function HomeScreen() {
           style={styles.searchInput}
           placeholder="Search for a recipe..."
           placeholderTextColor="gray"
+          onChangeText={handleTextChange}
         />
 
         <Button>
@@ -70,9 +106,20 @@ export default function HomeScreen() {
 
       {/* Recipes Section */}
       <Text style={styles.sectionTitle}>Recipes</Text>
-      <Text style={styles.noRecipeText}>No Recipe searched...</Text>
+      {list && list.length > 0 ? (
+        <FlatList
+          data={list}
+          keyExtractor={(item) => item.idMeal.toString()}
+          renderItem={({ item }) => <Text>{item.strMeal}</Text>}
+        />
+      ) : (
+        <Text style={styles.noRecipeText}>No Recipe searched...</Text>
+      )}
 
+      {/* Favorites Section  */}
       <RecipeCard />
+
+      {/* History Section */}
       <HistoryElement />
     </View>
   );
