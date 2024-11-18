@@ -1,6 +1,7 @@
 import {
   DarkTheme,
   DefaultTheme,
+  RouteProp,
   ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
@@ -34,8 +35,19 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Stack>
+        <Stack.Screen
+          name="details"
+          options={() => ({
+            title: "EatFresh 🌱",
+          })}
+        />
         <Stack.Screen name="+not-found" />
-        <Stack.Screen name="index" />
+        <Stack.Screen
+          name="index"
+          options={() => ({
+            title: "EatFresh 🌱",
+          })}
+        />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>

@@ -54,6 +54,19 @@ export interface Meal {
     dateModified: string | null;
 }
 
+export interface RecipeCardProps {
+    mealId: string;
+    mealName: string;
+    mealImage: string | null;
+    mealCategory: string;
+    mealArea: string;
+}
+
+export interface Ingredient {
+    ingredient: string,
+    measure: string,
+}
+
 const fetchAllMeals = async (letter: string) => {
     try {
         const response = await fetch(
@@ -75,7 +88,6 @@ const fetchRandomMeal = async () => {
             "https://www.themealdb.com/api/json/v1/1/random.php"
         );
         const data = await response.json();
-        console.log(data.meals[0]);
     } catch (error) {
         console.error("Error fetching random meal:", error);
     }
@@ -87,7 +99,6 @@ const fetchMealDetail = async (id: number) => {
             "www.themealdb.com/api/json/v1/1/lookup.php?i=" + id,
         );
         const data = await response.json();
-        console.log(data.meals[0]);
     } catch (error) {
         console.error("Error fetching random meal:", error);
     }

@@ -1,6 +1,7 @@
 import HistoryElement from "@/components/HistoryElement/HistoryElement";
-import RecipeCard from "@/components/RecipeCard/RecipeCard";
 import { Meal } from "@/hooks/useFetchData";
+import { Link } from "expo-router";
+import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
@@ -11,6 +12,9 @@ import {
   Image,
 } from "react-native";
 import { Avatar, Button, Card, Text } from "react-native-paper";
+import SearchRecipeCard from "@/components/RecipeCard/SearchRecipeCard";
+import FavoriteRecipeCard from "@/components/RecipeCard/FavoriteRecipeCard";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const styles = StyleSheet.create({
   container: {
@@ -55,10 +59,31 @@ export default function HomeScreen() {
 
   const [searchText, setSearchText] = useState("");
 
-  const handleTextChange = (text: string) => {
+  const [randomMeal, setRandomMeal] = useState<Meal | null>(null);
+
+  const [favoriteMeals, setFavoriteMeals] = useState<Meal[] | null>(null);
+
+  const getItem = async (): Promise<Meal[]> => {
+    try {
+      const value = await AsyncStorage.getItem("favorite");
+      return value != null ? JSON.parse(value) : [];
+    } catch (error) {
+      console.error("Error getting item:", error);
+      return [];
+    }
+  };
+
+  const handleTextChange = async (text: string) => {
+    setRandomMeal(null);
     setSearchText(text);
-    fetchAllMeals(text.charAt(0));
-    filterMeals(searchText);
+    if (text) {
+      const meals = await fetchAllMeals(text.charAt(0));
+      if (meals) {
+        filterMeals(meals, text);
+      }
+    } else {
+      setList(null);
+    }
   };
 
   const fetchAllMeals = async (letter: string) => {
@@ -67,30 +92,51 @@ export default function HomeScreen() {
         "https://www.themealdb.com/api/json/v1/1/search.php?f=" + letter
       );
       const data = await response.json();
-      if (data.meals) {
-        setList(data.meals);
-      }
-      return data.meals;
+      return data.meals || [];
     } catch (error) {
       console.error("Error fetching meals:", error);
+      return [];
     }
   };
 
-  const filterMeals = async (text: string) => {
-    setList(
-      (prevList) =>
-        prevList?.filter((meal) =>
-          meal.strMeal.toLowerCase().includes(text.toLowerCase())
-        ) || null
-    );
+  const fetchRandomMeal = async () => {
+    try {
+      const response = await fetch(
+        "https://www.themealdb.com/api/json/v1/1/random.php"
+      );
+      const data = await response.json();
+      return data.meals[0];
+    } catch (error) {
+      console.error("Error fetching random meal:", error);
+    }
   };
+
+  const getRandomMeal = async () => {
+    setList(null);
+    const data = await fetchRandomMeal();
+    if (data) {
+      setRandomMeal(data);
+    }
+  };
+
+  const filterMeals = (meals: Meal[], text: string) => {
+    const filteredMeals = meals.filter((meal) =>
+      meal.strMeal.toLowerCase().startsWith(text.toLowerCase())
+    );
+    setList(filteredMeals);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const storageItem = await getItem();
+      setFavoriteMeals(storageItem);
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <Text style={styles.header}>EatFresh 🌱</Text>
-
-      {/* Search Bar */}
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
@@ -98,28 +144,32 @@ export default function HomeScreen() {
           placeholderTextColor="gray"
           onChangeText={handleTextChange}
         />
-
-        <Button>
+        <Button onPress={getRandomMeal}>
           <Text>Random Recipe</Text>
         </Button>
       </View>
-
-      {/* Recipes Section */}
       <Text style={styles.sectionTitle}>Recipes</Text>
       {list && list.length > 0 ? (
         <FlatList
           data={list}
           keyExtractor={(item) => item.idMeal.toString()}
-          renderItem={({ item }) => <Text>{item.strMeal}</Text>}
+          renderItem={({ item }) => <SearchRecipeCard item={item} />}
         />
+      ) : randomMeal ? (
+        <View>
+          <SearchRecipeCard item={randomMeal} />
+        </View>
       ) : (
         <Text style={styles.noRecipeText}>No Recipe searched...</Text>
       )}
-
-      {/* Favorites Section  */}
-      <RecipeCard />
-
-      {/* History Section */}
+      <Text style={styles.sectionTitle}>Favorites</Text>
+      {favoriteMeals ? (
+        <FlatList
+          data={favoriteMeals}
+          keyExtractor={(item) => item.idMeal.toString()}
+          renderItem={({ item }) => <FavoriteRecipeCard item={item} />}
+        />
+      ) : null}
       <HistoryElement />
     </View>
   );
