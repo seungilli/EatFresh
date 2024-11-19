@@ -1,4 +1,6 @@
-import { Meal, RecipeCardProps } from "@/hooks/useFetchData";
+import useFavorites from "@/hooks/useFavorites";
+import { useFavoritesContext } from "@/hooks/useFavoritesProvider";
+import { Meal, RecipeCardProps } from "@/types/data";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Link } from "expo-router";
@@ -55,17 +57,13 @@ type FavoriteRecipeCardProps = {
 };
 
 export default function FavoriteRecipeCard({ item }: FavoriteRecipeCardProps) {
-  const setItem = async (item: Meal) => {
-    try {
-      const existingFavorites = await AsyncStorage.getItem("favorite");
-      let favorites = existingFavorites ? JSON.parse(existingFavorites) : [];
-      if (!Array.isArray(favorites)) {
-        favorites = [];
-      }
-      favorites.push(item);
-      await AsyncStorage.setItem("favorite", JSON.stringify(favorites));
-    } catch (error) {
-      console.error("Error setting item:", error);
+  const { favorites, addFavorite, removeFavorite } = useFavoritesContext();
+
+  const handleFavorites = async (newItem: Meal) => {
+    if (!favorites.find((t) => t.idMeal == newItem.idMeal)) {
+      addFavorite(newItem);
+    } else {
+      removeFavorite(newItem.idMeal);
     }
   };
 
@@ -84,10 +82,14 @@ export default function FavoriteRecipeCard({ item }: FavoriteRecipeCardProps) {
             </View>
           </View>
           <TouchableOpacity
-            onPress={() => setItem(item)}
+            onPress={() => handleFavorites(item)}
             style={styles.heartIconContainer}
           >
-            <Ionicons name="heart-outline" size={20} color="grey" />
+            {favorites.find((t) => t.idMeal == item.idMeal) ? (
+              <Ionicons name="heart" size={20} color="pink" />
+            ) : (
+              <Ionicons name="heart-outline" size={20} color="grey" />
+            )}
           </TouchableOpacity>
         </View>
       </Link>

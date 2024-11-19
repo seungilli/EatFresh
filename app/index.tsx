@@ -1,8 +1,8 @@
-import HistoryElement from "@/components/HistoryElement/HistoryElement";
-import { Meal } from "@/hooks/useFetchData";
+import HistoryElement from "@/components/HistoryElement/HistoryItem";
+import { HistoryType, Meal } from "@/types/data";
 import { Link } from "expo-router";
 import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -15,6 +15,10 @@ import { Avatar, Button, Card, Text } from "react-native-paper";
 import SearchRecipeCard from "@/components/RecipeCard/SearchRecipeCard";
 import FavoriteRecipeCard from "@/components/RecipeCard/FavoriteRecipeCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import useFavorites from "@/hooks/useFavorites";
+import { useFavoritesContext } from "@/hooks/useFavoritesProvider";
+import { useHistoryContext } from "@/hooks/useHistoryProvider";
+import HistoryList from "@/components/HistoryElement/HistoryList";
 
 const styles = StyleSheet.create({
   container: {
@@ -61,29 +65,28 @@ export default function HomeScreen() {
 
   const [randomMeal, setRandomMeal] = useState<Meal | null>(null);
 
-  const [favoriteMeals, setFavoriteMeals] = useState<Meal[] | null>(null);
+  const { favorites, refreshFavorites } = useFavoritesContext();
 
-  const getItem = async (): Promise<Meal[]> => {
-    try {
-      const value = await AsyncStorage.getItem("favorite");
-      return value != null ? JSON.parse(value) : [];
-    } catch (error) {
-      console.error("Error getting item:", error);
-      return [];
-    }
-  };
+  const { addHistoryItem } = useHistoryContext();
 
-  const handleTextChange = async (text: string) => {
+  const handleSubmit = async () => {
     setRandomMeal(null);
-    setSearchText(text);
-    if (text) {
-      const meals = await fetchAllMeals(text.charAt(0));
+    const newHistoryItem: HistoryType = {
+      searchedText: searchText,
+      time: new Date().toString(),
+    };
+    addHistoryItem(newHistoryItem);
+    if (searchText) {
+      const meals = await fetchAllMeals(searchText.charAt(0));
       if (meals) {
-        filterMeals(meals, text);
+        filterMeals(meals, searchText);
       }
     } else {
       setList(null);
     }
+  };
+  const handleTextChange = async (text: string) => {
+    setSearchText(text);
   };
 
   const fetchAllMeals = async (letter: string) => {
@@ -126,15 +129,6 @@ export default function HomeScreen() {
     setList(filteredMeals);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const storageItem = await getItem();
-      setFavoriteMeals(storageItem);
-    };
-
-    fetchData();
-  }, []);
-
   return (
     <View style={styles.container}>
       <View style={styles.searchContainer}>
@@ -143,6 +137,7 @@ export default function HomeScreen() {
           placeholder="Search for a recipe..."
           placeholderTextColor="gray"
           onChangeText={handleTextChange}
+          onSubmitEditing={handleSubmit}
         />
         <Button onPress={getRandomMeal}>
           <Text>Random Recipe</Text>
@@ -163,14 +158,14 @@ export default function HomeScreen() {
         <Text style={styles.noRecipeText}>No Recipe searched...</Text>
       )}
       <Text style={styles.sectionTitle}>Favorites</Text>
-      {favoriteMeals ? (
+      {favorites ? (
         <FlatList
-          data={favoriteMeals}
+          data={favorites}
           keyExtractor={(item) => item.idMeal.toString()}
           renderItem={({ item }) => <FavoriteRecipeCard item={item} />}
         />
       ) : null}
-      <HistoryElement />
+      <HistoryList />
     </View>
   );
 }

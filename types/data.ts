@@ -67,39 +67,7 @@ export interface Ingredient {
     measure: string,
 }
 
-const fetchAllMeals = async (letter: string) => {
-    try {
-        const response = await fetch(
-            "https://www.themealdb.com/api/json/v1/1/search.php?f=" + letter,
-        );
-        const data = await response.json();
-        // if (data.meals) {
-        //     setList(data.meals);
-        // }
-        return data.meals;
-    } catch (error) {
-        console.error("Error fetching meals:", error);
-    }
-};
-
-const fetchRandomMeal = async () => {
-    try {
-        const response = await fetch(
-            "https://www.themealdb.com/api/json/v1/1/random.php"
-        );
-        const data = await response.json();
-    } catch (error) {
-        console.error("Error fetching random meal:", error);
-    }
-};
-
-const fetchMealDetail = async (id: number) => {
-    try {
-        const response = await fetch(
-            "www.themealdb.com/api/json/v1/1/lookup.php?i=" + id,
-        );
-        const data = await response.json();
-    } catch (error) {
-        console.error("Error fetching random meal:", error);
-    }
-};
+export interface HistoryType {
+    searchedText: string,
+    time: string,
+}

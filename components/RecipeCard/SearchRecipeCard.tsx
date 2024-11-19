@@ -1,10 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Meal, RecipeCardProps } from "@/hooks/useFetchData";
+import { Meal, RecipeCardProps } from "@/types/data";
 import { Link } from "expo-router";
 import React from "react";
 import { View, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { Card, Text } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import useFavorites from "@/hooks/useFavorites";
+import { useFavoritesContext } from "@/hooks/useFavoritesProvider";
 
 const styles = StyleSheet.create({
   card: {
@@ -55,17 +57,13 @@ type SearchRecipeCardProps = {
 };
 
 export default function SearchRecipeCard({ item }: SearchRecipeCardProps) {
-  const setItem = async (item: Meal) => {
-    try {
-      const existingFavorites = await AsyncStorage.getItem("favorite");
-      let favorites = existingFavorites ? JSON.parse(existingFavorites) : [];
-      if (!Array.isArray(favorites)) {
-        favorites = [];
-      }
-      favorites.push(item);
-      await AsyncStorage.setItem("favorite", JSON.stringify(favorites));
-    } catch (error) {
-      console.error("Error setting item:", error);
+  const { favorites, addFavorite, removeFavorite } = useFavoritesContext();
+
+  const handleFavorites = async (newItem: Meal) => {
+    if (!favorites.find((t) => t.idMeal == newItem.idMeal)) {
+      addFavorite(newItem);
+    } else {
+      removeFavorite(newItem.idMeal);
     }
   };
 
@@ -84,10 +82,14 @@ export default function SearchRecipeCard({ item }: SearchRecipeCardProps) {
             </View>
           </View>
           <TouchableOpacity
-            onPress={() => setItem(item)}
+            onPress={() => handleFavorites(item)}
             style={styles.heartIconContainer}
           >
-            <Ionicons name="heart-outline" size={20} color="grey" />
+            {favorites.find((t) => t.idMeal == item.idMeal) ? (
+              <Ionicons name="heart" size={20} color="pink" />
+            ) : (
+              <Ionicons name="heart-outline" size={20} color="grey" />
+            )}
           </TouchableOpacity>
         </View>
       </Link>

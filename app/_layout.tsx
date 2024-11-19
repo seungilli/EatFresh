@@ -12,6 +12,9 @@ import { useEffect } from "react";
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { FavoritesProvider } from "@/hooks/useFavoritesProvider";
+import useFavorites from "@/hooks/useFavorites";
+import { HistoryProvider } from "@/hooks/useHistoryProvider";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -34,22 +37,26 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen
-          name="details"
-          options={() => ({
-            title: "EatFresh 🌱",
-          })}
-        />
-        <Stack.Screen name="+not-found" />
-        <Stack.Screen
-          name="index"
-          options={() => ({
-            title: "EatFresh 🌱",
-          })}
-        />
-      </Stack>
-      <StatusBar style="auto" />
+      <FavoritesProvider>
+        <HistoryProvider>
+          <Stack>
+            <Stack.Screen
+              name="details"
+              options={() => ({
+                title: "EatFresh 🌱",
+              })}
+            />
+            <Stack.Screen name="+not-found" />
+            <Stack.Screen
+              name="index"
+              options={() => ({
+                title: "EatFresh 🌱",
+              })}
+            />
+          </Stack>
+          <StatusBar style="auto" />
+        </HistoryProvider>
+      </FavoritesProvider>
     </ThemeProvider>
   );
 }

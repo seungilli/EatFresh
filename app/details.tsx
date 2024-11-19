@@ -10,8 +10,9 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useLocalSearchParams } from "expo-router";
-import { Ingredient, Meal } from "@/hooks/useFetchData";
+import { Ingredient, Meal } from "@/types/data";
 import { Ionicons } from "@expo/vector-icons";
+import { useFavoritesContext } from "@/hooks/useFavoritesProvider";
 
 const styles = StyleSheet.create({
   loaderContainer: {
@@ -73,9 +74,19 @@ const styles = StyleSheet.create({
 
 export default function DetailsScreen() {
   const { recipeId } = useLocalSearchParams();
-  const [meal, setMeal] = useState<Meal | null>(null);
+  const [item, setItem] = useState<Meal | null>(null);
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const { favorites, addFavorite, removeFavorite } = useFavoritesContext();
+
+  const handleFavorites = async (newItem: Meal) => {
+    if (!favorites.find((t) => t.idMeal == newItem.idMeal)) {
+      addFavorite(newItem);
+    } else {
+      removeFavorite(newItem.idMeal);
+    }
+  };
 
   const fetchMealDetail = async (id: string) => {
     try {
@@ -86,7 +97,7 @@ export default function DetailsScreen() {
       const data = await response.json();
       if (data.meals && data.meals.length > 0) {
         const mealData = data.meals[0];
-        setMeal(mealData);
+        setItem(mealData);
         const ingredientList = [];
 
         for (let i = 1; i <= 20; i++) {
@@ -121,7 +132,7 @@ export default function DetailsScreen() {
     );
   }
 
-  if (!meal) {
+  if (!item) {
     return (
       <View style={styles.loaderContainer}>
         <Text style={styles.errorText}>No meal data found.</Text>
@@ -132,13 +143,17 @@ export default function DetailsScreen() {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.headerContainer}>
-        <Text style={styles.headerTitle}>{meal.strMeal}</Text>
-        <TouchableOpacity>
-          <Ionicons name="heart-outline" size={25} color="grey" />
+        <Text style={styles.headerTitle}>{item.strMeal}</Text>
+        <TouchableOpacity onPress={() => handleFavorites(item)}>
+          {favorites.find((t) => t.idMeal == item.idMeal) ? (
+            <Ionicons name="heart" size={20} color="pink" />
+          ) : (
+            <Ionicons name="heart-outline" size={20} color="grey" />
+          )}
         </TouchableOpacity>
       </View>
 
-      <Image source={{ uri: meal.strMealThumb }} style={styles.mealImage} />
+      <Image source={{ uri: item.strMealThumb }} style={styles.mealImage} />
 
       {ingredients.length > 0 ? (
         <View style={styles.sectionContainer}>
@@ -158,7 +173,7 @@ export default function DetailsScreen() {
 
       <View style={styles.sectionContainer}>
         <Text style={styles.sectionTitle}>Instructions</Text>
-        <Text style={styles.instructionsText}>{meal.strInstructions}</Text>
+        <Text style={styles.instructionsText}>{item.strInstructions}</Text>
       </View>
     </ScrollView>
   );
