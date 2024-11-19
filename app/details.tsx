@@ -13,6 +13,7 @@ import { useLocalSearchParams } from "expo-router";
 import { Ingredient, Meal } from "@/types/data";
 import { Ionicons } from "@expo/vector-icons";
 import { useFavoritesContext } from "@/hooks/useFavoritesProvider";
+import { Colors } from "@/constants/Colors";
 
 const styles = StyleSheet.create({
   loaderContainer: {
@@ -31,10 +32,8 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
+    color: Colors.light.header,
     fontWeight: "bold",
-  },
-  heartIcon: {
-    fontSize: 24,
   },
   mealImage: {
     width: "100%",
@@ -49,6 +48,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 8,
+    color: Colors.light.header,
   },
   ingredientRow: {
     flexDirection: "row",
@@ -146,9 +146,13 @@ export default function DetailsScreen() {
         <Text style={styles.headerTitle}>{item.strMeal}</Text>
         <TouchableOpacity onPress={() => handleFavorites(item)}>
           {favorites.find((t) => t.idMeal == item.idMeal) ? (
-            <Ionicons name="heart" size={20} color="pink" />
+            <Ionicons name="heart" size={20} color={Colors.light.favorite} />
           ) : (
-            <Ionicons name="heart-outline" size={20} color="grey" />
+            <Ionicons
+              name="heart-outline"
+              size={20}
+              color={Colors.light.notFavorite}
+            />
           )}
         </TouchableOpacity>
       </View>

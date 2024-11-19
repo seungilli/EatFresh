@@ -2,10 +2,17 @@ import useFavorites from "@/hooks/useFavorites";
 import { useFavoritesContext } from "@/hooks/useFavoritesProvider";
 import { Meal, RecipeCardProps } from "@/types/data";
 import { Ionicons } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Link } from "expo-router";
+import { Colors } from "@/constants/Colors";
 import React from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  useColorScheme,
+} from "react-native";
 import { Card } from "react-native-paper";
 
 const styles = StyleSheet.create({
@@ -38,6 +45,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   tag: {
+    backgroundColor: Colors.light.tag,
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 16,
@@ -57,6 +65,7 @@ type FavoriteRecipeCardProps = {
 };
 
 export default function FavoriteRecipeCard({ item }: FavoriteRecipeCardProps) {
+  const colors = useColorScheme();
   const { favorites, addFavorite, removeFavorite } = useFavoritesContext();
 
   const handleFavorites = async (newItem: Meal) => {
@@ -70,6 +79,8 @@ export default function FavoriteRecipeCard({ item }: FavoriteRecipeCardProps) {
   return (
     <Card style={styles.card}>
       <Link href={`/details?recipeId=${item.idMeal}`}>
+        {/* Force Not Found Page*/}
+        {/* <Link href={`notexistingscreen`}> */}
         <View style={styles.container}>
           {item.strMealThumb ? (
             <Image source={{ uri: item.strMealThumb }} style={styles.image} />
@@ -86,9 +97,13 @@ export default function FavoriteRecipeCard({ item }: FavoriteRecipeCardProps) {
             style={styles.heartIconContainer}
           >
             {favorites.find((t) => t.idMeal == item.idMeal) ? (
-              <Ionicons name="heart" size={20} color="pink" />
+              <Ionicons name="heart" size={20} color={Colors.light.favorite} />
             ) : (
-              <Ionicons name="heart-outline" size={20} color="grey" />
+              <Ionicons
+                name="heart-outline"
+                size={20}
+                color={Colors.light.notFavorite}
+              />
             )}
           </TouchableOpacity>
         </View>

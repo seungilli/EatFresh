@@ -1,25 +1,22 @@
-import HistoryElement from "@/components/HistoryElement/HistoryItem";
 import { HistoryType, Meal } from "@/types/data";
-import { Link } from "expo-router";
-import { useNavigation } from "@react-navigation/native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   View,
   TextInput,
-  TouchableOpacity,
   FlatList,
-  Image,
+  TouchableOpacity,
 } from "react-native";
-import { Avatar, Button, Card, Text } from "react-native-paper";
+import { Button, Text } from "react-native-paper";
 import SearchRecipeCard from "@/components/RecipeCard/SearchRecipeCard";
 import FavoriteRecipeCard from "@/components/RecipeCard/FavoriteRecipeCard";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import useFavorites from "@/hooks/useFavorites";
 import { useFavoritesContext } from "@/hooks/useFavoritesProvider";
 import { useHistoryContext } from "@/hooks/useHistoryProvider";
 import HistoryList from "@/components/HistoryElement/HistoryList";
 
+import { Dimensions } from "react-native";
+import { Colors } from "@/constants/Colors";
+const windowWidth = Dimensions.get("window").width;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -33,22 +30,26 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 20,
+  },
+  randomContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: windowWidth,
+  },
+  noIdeaText: {
+    marginRight: 100,
   },
   searchInput: {
     flex: 1,
     height: 40,
+    width: windowWidth,
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
     marginRight: 10,
   },
-  randomButton: {
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 5,
-  },
   sectionTitle: {
+    color: Colors.light.header,
     fontSize: 18,
     fontWeight: "bold",
     marginVertical: 10,
@@ -56,16 +57,53 @@ const styles = StyleSheet.create({
   noRecipeText: {
     marginBottom: 20,
   },
+  button: {
+    marginTop: 5,
+    backgroundColor: Colors.light.tint,
+    width: 125,
+    height: 25,
+    borderRadius: 20,
+    paddingVertical: 5,
+    paddingHorizontal: 20,
+    elevation: 1,
+  },
+  buttonText: {
+    fontSize: 12,
+  },
+  historyArrangeContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: windowWidth,
+  },
+  historyButton: {
+    marginLeft: 260,
+    marginTop: 5,
+    backgroundColor: Colors.light.tint,
+    width: 50,
+    height: 25,
+    borderRadius: 20,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    elevation: 1,
+  },
+  historyButtonText: {
+    fontSize: 12,
+  },
+  historyContainer: {
+    height: 200,
+  },
 });
 
 export default function HomeScreen() {
   const [list, setList] = useState<Meal[] | null>(null);
 
+  const { clearHistory } = useHistoryContext();
+
   const [searchText, setSearchText] = useState("");
 
   const [randomMeal, setRandomMeal] = useState<Meal | null>(null);
 
-  const { favorites, refreshFavorites } = useFavoritesContext();
+  const { favorites } = useFavoritesContext();
 
   const { addHistoryItem } = useHistoryContext();
 
@@ -126,7 +164,17 @@ export default function HomeScreen() {
     const filteredMeals = meals.filter((meal) =>
       meal.strMeal.toLowerCase().startsWith(text.toLowerCase())
     );
-    setList(filteredMeals);
+
+    const sortedMeals = filteredMeals.sort((a, b) => {
+      const isAFavorite = favorites.some((fav) => fav.idMeal === a.idMeal);
+      const isBFavorite = favorites.some((fav) => fav.idMeal === b.idMeal);
+
+      if (isAFavorite && !isBFavorite) return -1;
+      if (!isAFavorite && isBFavorite) return 1;
+      return 0;
+    });
+
+    setList(sortedMeals);
   };
 
   return (
@@ -135,13 +183,16 @@ export default function HomeScreen() {
         <TextInput
           style={styles.searchInput}
           placeholder="Search for a recipe..."
-          placeholderTextColor="gray"
+          placeholderTextColor={Colors.light.tint}
           onChangeText={handleTextChange}
           onSubmitEditing={handleSubmit}
         />
-        <Button onPress={getRandomMeal}>
-          <Text>Random Recipe</Text>
-        </Button>
+      </View>
+      <View style={styles.randomContainer}>
+        <Text style={styles.noIdeaText}>No idea what to cook?</Text>
+        <TouchableOpacity style={styles.button} onPress={getRandomMeal}>
+          <Text style={styles.buttonText}>Random Recipe</Text>
+        </TouchableOpacity>
       </View>
       <Text style={styles.sectionTitle}>Recipes</Text>
       {list && list.length > 0 ? (
@@ -165,7 +216,15 @@ export default function HomeScreen() {
           renderItem={({ item }) => <FavoriteRecipeCard item={item} />}
         />
       ) : null}
-      <HistoryList />
+      <View style={styles.historyContainer}>
+        <View style={styles.historyArrangeContainer}>
+          <Text style={styles.sectionTitle}>History</Text>
+          <TouchableOpacity style={styles.historyButton} onPress={clearHistory}>
+            <Text style={styles.historyButtonText}>Clear</Text>
+          </TouchableOpacity>
+        </View>
+        <HistoryList />
+      </View>
     </View>
   );
 }

@@ -7,6 +7,7 @@ import { Card, Text } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import useFavorites from "@/hooks/useFavorites";
 import { useFavoritesContext } from "@/hooks/useFavoritesProvider";
+import { Colors } from "@/constants/Colors";
 
 const styles = StyleSheet.create({
   card: {
@@ -38,6 +39,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   tag: {
+    backgroundColor: Colors.light.tag,
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 16,
@@ -86,9 +88,13 @@ export default function SearchRecipeCard({ item }: SearchRecipeCardProps) {
             style={styles.heartIconContainer}
           >
             {favorites.find((t) => t.idMeal == item.idMeal) ? (
-              <Ionicons name="heart" size={20} color="pink" />
+              <Ionicons name="heart" size={20} color={Colors.light.favorite} />
             ) : (
-              <Ionicons name="heart-outline" size={20} color="grey" />
+              <Ionicons
+                name="heart-outline"
+                size={20}
+                color={Colors.light.notFavorite}
+              />
             )}
           </TouchableOpacity>
         </View>

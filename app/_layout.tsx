@@ -4,6 +4,8 @@ import {
   RouteProp,
   ThemeProvider,
 } from "@react-navigation/native";
+import { Text } from "react-native-paper";
+
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -13,8 +15,10 @@ import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { FavoritesProvider } from "@/hooks/useFavoritesProvider";
-import useFavorites from "@/hooks/useFavorites";
 import { HistoryProvider } from "@/hooks/useHistoryProvider";
+import LeafIcon from "@/assets/icons/leaf_icon";
+import { View } from "react-native";
+import { Colors } from "@/constants/Colors";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -43,14 +47,24 @@ export default function RootLayout() {
             <Stack.Screen
               name="details"
               options={() => ({
-                title: "EatFresh 🌱",
+                headerRight: () => <LeafIcon width={50} height={50} />,
+                title: "EatFresh",
+                headerTitleStyle: {
+                  color: Colors.light.header,
+                  fontWeight: "bold",
+                },
               })}
             />
             <Stack.Screen name="+not-found" />
             <Stack.Screen
               name="index"
               options={() => ({
-                title: "EatFresh 🌱",
+                headerRight: () => <LeafIcon width={50} height={50} />,
+                title: "EatFresh",
+                headerTitleStyle: {
+                  color: Colors.light.header,
+                  fontWeight: "bold",
+                },
               })}
             />
           </Stack>
