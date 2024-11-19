@@ -1,6 +1,6 @@
 import { HistoryType } from "@/types/data";
-import { View, TouchableOpacity, StyleSheet, FlatList } from "react-native";
-import { Avatar, Button, Card, Text } from "react-native-paper";
+import { View, StyleSheet } from "react-native";
+import { Text } from "react-native-paper";
 
 const styles = StyleSheet.create({
   historyItem: {
@@ -13,6 +13,8 @@ const styles = StyleSheet.create({
   },
   historyText: {
     flex: 1,
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
 
@@ -25,9 +27,6 @@ export default function HistoryItem({ item }: HistoryItemProps) {
     <View style={styles.historyItem}>
       <Text style={styles.historyTime}>{item.time}</Text>
       <Text style={styles.historyText}>{item.searchedText}</Text>
-      <TouchableOpacity>
-        <Text>Resume</Text>
-      </TouchableOpacity>
     </View>
   );
 }

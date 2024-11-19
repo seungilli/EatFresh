@@ -1,5 +1,4 @@
 import React, { createContext, useContext, ReactNode } from "react";
-import useFavorites from "./useFavorites";
 import useHistory from "./useHistory";
 
 type HistoryContextType = ReturnType<typeof useHistory>;

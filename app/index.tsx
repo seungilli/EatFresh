@@ -7,7 +7,7 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import { Button, Text } from "react-native-paper";
+import { Text } from "react-native-paper";
 import SearchRecipeCard from "@/components/RecipeCard/SearchRecipeCard";
 import FavoriteRecipeCard from "@/components/RecipeCard/FavoriteRecipeCard";
 import { useFavoritesContext } from "@/hooks/useFavoritesProvider";
@@ -111,7 +111,8 @@ export default function HomeScreen() {
     setRandomMeal(null);
     const newHistoryItem: HistoryType = {
       searchedText: searchText,
-      time: new Date().toString(),
+      time:
+        new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString(),
     };
     addHistoryItem(newHistoryItem);
     if (searchText) {

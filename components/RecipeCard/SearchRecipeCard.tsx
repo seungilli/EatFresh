@@ -1,11 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Meal, RecipeCardProps } from "@/types/data";
+import { Meal } from "@/types/data";
 import { Link } from "expo-router";
 import React from "react";
 import { View, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { Card, Text } from "react-native-paper";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import useFavorites from "@/hooks/useFavorites";
 import { useFavoritesContext } from "@/hooks/useFavoritesProvider";
 import { Colors } from "@/constants/Colors";
 
@@ -88,11 +86,11 @@ export default function SearchRecipeCard({ item }: SearchRecipeCardProps) {
             style={styles.heartIconContainer}
           >
             {favorites.find((t) => t.idMeal == item.idMeal) ? (
-              <Ionicons name="heart" size={20} color={Colors.light.favorite} />
+              <Ionicons name="heart" size={30} color={Colors.light.favorite} />
             ) : (
               <Ionicons
                 name="heart-outline"
-                size={20}
+                size={30}
                 color={Colors.light.notFavorite}
               />
             )}

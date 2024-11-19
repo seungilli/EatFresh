@@ -1,6 +1,5 @@
-import useFavorites from "@/hooks/useFavorites";
 import { useFavoritesContext } from "@/hooks/useFavoritesProvider";
-import { Meal, RecipeCardProps } from "@/types/data";
+import { Meal } from "@/types/data";
 import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { Colors } from "@/constants/Colors";
@@ -97,11 +96,11 @@ export default function FavoriteRecipeCard({ item }: FavoriteRecipeCardProps) {
             style={styles.heartIconContainer}
           >
             {favorites.find((t) => t.idMeal == item.idMeal) ? (
-              <Ionicons name="heart" size={20} color={Colors.light.favorite} />
+              <Ionicons name="heart" size={30} color={Colors.light.favorite} />
             ) : (
               <Ionicons
                 name="heart-outline"
-                size={20}
+                size={30}
                 color={Colors.light.notFavorite}
               />
             )}

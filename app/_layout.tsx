@@ -1,10 +1,8 @@
 import {
   DarkTheme,
   DefaultTheme,
-  RouteProp,
   ThemeProvider,
 } from "@react-navigation/native";
-import { Text } from "react-native-paper";
 
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
@@ -17,7 +15,6 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { FavoritesProvider } from "@/hooks/useFavoritesProvider";
 import { HistoryProvider } from "@/hooks/useHistoryProvider";
 import LeafIcon from "@/assets/icons/leaf_icon";
-import { View } from "react-native";
 import { Colors } from "@/constants/Colors";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.

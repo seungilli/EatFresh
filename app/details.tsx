@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
-  FlatList,
   ActivityIndicator,
   Text,
   Image,
@@ -146,11 +145,11 @@ export default function DetailsScreen() {
         <Text style={styles.headerTitle}>{item.strMeal}</Text>
         <TouchableOpacity onPress={() => handleFavorites(item)}>
           {favorites.find((t) => t.idMeal == item.idMeal) ? (
-            <Ionicons name="heart" size={20} color={Colors.light.favorite} />
+            <Ionicons name="heart" size={30} color={Colors.light.favorite} />
           ) : (
             <Ionicons
               name="heart-outline"
-              size={20}
+              size={30}
               color={Colors.light.notFavorite}
             />
           )}
