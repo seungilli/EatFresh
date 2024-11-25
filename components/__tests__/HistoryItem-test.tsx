@@ -7,7 +7,7 @@ import { mockHistoryItem1 } from "@/types/mock-data";
 describe("<HistoryItem />", () => {
   const mockHistoryItem = mockHistoryItem1;
 
-  it("should render correctly", () => {
+  it("should render", () => {
     const tree = renderer
       .create(<HistoryItem item={mockHistoryItem} />)
       .toJSON();
