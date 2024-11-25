@@ -4,7 +4,6 @@ import { TouchableOpacity, Text, Image } from "react-native";
 import { Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import FavoriteRecipeCard from "../RecipeCard/FavoriteRecipeCard";
-import { Meal } from "@/types/data";
 import { mockMeal1 } from "@/types/mock-data";
 
 jest.mock("@expo/vector-icons", () => ({

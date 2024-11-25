@@ -2,7 +2,6 @@ import React from "react";
 import renderer from "react-test-renderer";
 import { Text } from "react-native";
 import HistoryItem from "../HistoryElement/HistoryItem";
-import { HistoryType } from "@/types/data";
 import { mockHistoryItem1 } from "@/types/mock-data";
 
 describe("<HistoryItem />", () => {

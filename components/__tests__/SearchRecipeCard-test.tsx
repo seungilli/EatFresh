@@ -3,7 +3,6 @@ import renderer, { act } from "react-test-renderer";
 import { TouchableOpacity, Text, Image } from "react-native";
 import { Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { Meal } from "@/types/data";
 import SearchRecipeCard from "../RecipeCard/SearchRecipeCard";
 import { mockMeal1 } from "@/types/mock-data";
 
