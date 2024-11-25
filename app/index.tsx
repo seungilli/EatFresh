@@ -1,5 +1,5 @@
 import { HistoryType, Meal } from "@/types/data";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -105,6 +105,16 @@ export default function HomeScreen() {
 
   const { favorites } = useFavoritesContext();
 
+  const [favoritesLength, setFavoritesLength] = useState<number>(0);
+
+  useEffect(() => {
+    if (favoritesLength != favorites.length && list && list.length > 0) {
+      const sortedMeals = sortMeals(list);
+      setList(sortedMeals);
+      setFavoritesLength(favorites.length);
+    }
+  }, [favorites]);
+
   const handleSubmit = async () => {
     setRandomMeal(null);
 
@@ -169,7 +179,13 @@ export default function HomeScreen() {
       meal.strMeal.toLowerCase().startsWith(text.toLowerCase())
     );
 
-    const sortedMeals = filteredMeals.sort((a, b) => {
+    const sortedMeals = sortMeals(filteredMeals);
+
+    setList(sortedMeals);
+  };
+
+  const sortMeals = (meals: Meal[]) => {
+    const sortedMeals = meals.sort((a, b) => {
       const isAFavorite = favorites.some((fav) => fav.idMeal === a.idMeal);
       const isBFavorite = favorites.some((fav) => fav.idMeal === b.idMeal);
 
@@ -178,7 +194,7 @@ export default function HomeScreen() {
       return 0;
     });
 
-    setList(sortedMeals);
+    return sortedMeals;
   };
 
   return (
@@ -194,7 +210,11 @@ export default function HomeScreen() {
       </View>
       <View style={styles.randomContainer}>
         <Text style={styles.noIdeaText}>No idea what to cook?</Text>
-        <TouchableOpacity style={styles.button} onPress={getRandomMeal}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={getRandomMeal}
+          testID="random-button"
+        >
           <Text style={styles.buttonText}>Random Recipe</Text>
         </TouchableOpacity>
       </View>

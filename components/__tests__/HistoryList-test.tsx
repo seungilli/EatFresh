@@ -1,8 +1,9 @@
 import React from "react";
-import renderer, { act } from "react-test-renderer";
+import renderer from "react-test-renderer";
 import { FlatList } from "react-native";
 import HistoryList from "../HistoryElement/HistoryList";
 import HistoryItem from "../HistoryElement/HistoryItem";
+import { mockHistoryItem1, mockHistoryItem2 } from "@/types/mock-data";
 
 jest.mock("@react-native-async-storage/async-storage", () => ({
   setItem: jest.fn(() => Promise.resolve()),
@@ -16,10 +17,7 @@ jest.mock("@/hooks/useHistoryProvider", () => ({
   useHistoryContext: jest.fn(),
 }));
 
-const mockHistory = [
-  { time: "2023-11-23T12:00:00Z", details: "History Item 1" },
-  { time: "2023-11-24T14:00:00Z", details: "History Item 2" },
-];
+const mockHistory = [mockHistoryItem1, mockHistoryItem2];
 
 describe("<HistoryList />", () => {
   const mockUseHistoryContext =

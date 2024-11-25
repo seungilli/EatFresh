@@ -1,15 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`HistoryList Component renders correctly with given history data 1`] = `
+exports[`<HistoryList /> should render 1`] = `
 <RCTScrollView
   data={
     [
       {
-        "details": "History Item 1",
+        "searchedText": "History Item 1",
         "time": "2023-11-23T12:00:00Z",
       },
       {
-        "details": "History Item 2",
+        "searchedText": "History Item 2",
         "time": "2023-11-24T14:00:00Z",
       },
     ]
@@ -90,7 +90,9 @@ exports[`HistoryList Component renders correctly with given history data 1`] = `
               },
             ]
           }
-        />
+        >
+          History Item 1
+        </Text>
       </View>
     </View>
     <View
@@ -152,7 +154,9 @@ exports[`HistoryList Component renders correctly with given history data 1`] = `
               },
             ]
           }
-        />
+        >
+          History Item 2
+        </Text>
       </View>
     </View>
   </View>
