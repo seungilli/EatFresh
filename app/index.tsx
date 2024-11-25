@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
 export default function HomeScreen() {
   const [list, setList] = useState<Meal[] | null>(null);
 
-  const { clearHistory } = useHistoryContext();
+  const { history, clearHistory, addHistoryItem } = useHistoryContext();
 
   const [searchText, setSearchText] = useState("");
 
@@ -105,17 +105,18 @@ export default function HomeScreen() {
 
   const { favorites } = useFavoritesContext();
 
-  const { addHistoryItem } = useHistoryContext();
-
   const handleSubmit = async () => {
     setRandomMeal(null);
-    const newHistoryItem: HistoryType = {
-      searchedText: searchText,
-      time:
-        new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString(),
-    };
-    addHistoryItem(newHistoryItem);
+
     if (searchText) {
+      const newHistoryItem: HistoryType = {
+        searchedText: searchText,
+        time:
+          new Date().toLocaleDateString() +
+          " " +
+          new Date().toLocaleTimeString(),
+      };
+      addHistoryItem(newHistoryItem);
       const meals = await fetchAllMeals(searchText.charAt(0));
       if (meals) {
         filterMeals(meals, searchText);
@@ -124,6 +125,7 @@ export default function HomeScreen() {
       setList(null);
     }
   };
+
   const handleTextChange = async (text: string) => {
     setSearchText(text);
   };
@@ -155,6 +157,7 @@ export default function HomeScreen() {
 
   const getRandomMeal = async () => {
     setList(null);
+    setSearchText("");
     const data = await fetchRandomMeal();
     if (data) {
       setRandomMeal(data);
@@ -206,17 +209,21 @@ export default function HomeScreen() {
         <View>
           <SearchRecipeCard item={randomMeal} />
         </View>
+      ) : searchText && list?.length == 0 ? (
+        <Text style={styles.noRecipeText}>No Recipe found</Text>
       ) : (
         <Text style={styles.noRecipeText}>No Recipe searched...</Text>
       )}
       <Text style={styles.sectionTitle}>Favorites</Text>
-      {favorites ? (
+      {favorites && favorites.length > 0 ? (
         <FlatList
           data={favorites}
           keyExtractor={(item) => item.idMeal.toString()}
           renderItem={({ item }) => <FavoriteRecipeCard item={item} />}
         />
-      ) : null}
+      ) : (
+        <Text style={styles.noRecipeText}>No Favorites yet</Text>
+      )}
       <View style={styles.historyContainer}>
         <View style={styles.historyArrangeContainer}>
           <Text style={styles.sectionTitle}>History</Text>
@@ -224,7 +231,11 @@ export default function HomeScreen() {
             <Text style={styles.historyButtonText}>Clear</Text>
           </TouchableOpacity>
         </View>
-        <HistoryList />
+        {history && history.length > 0 ? (
+          <HistoryList />
+        ) : (
+          <Text style={styles.noRecipeText}>No Search History yet</Text>
+        )}
       </View>
     </View>
   );
