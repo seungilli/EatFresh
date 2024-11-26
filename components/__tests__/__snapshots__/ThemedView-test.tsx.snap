@@ -1,16 +1,69 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`should render 1`] = `
+exports[`ThemedView should apply the correct background color from darkColor 1`] = `
 <View
   style={
     [
       {
-        "backgroundColor": "#ffffff",
+        "backgroundColor": "darkblue",
       },
       undefined,
     ]
   }
->
-  Snapshot test!
-</View>
+/>
+`;
+
+exports[`ThemedView should apply the correct background color from lightColor 1`] = `
+<View
+  style={
+    [
+      {
+        "backgroundColor": "lightblue",
+      },
+      undefined,
+    ]
+  }
+/>
+`;
+
+exports[`ThemedView should handle undefined lightColor and darkColor gracefully 1`] = `
+<View
+  style={
+    [
+      {
+        "backgroundColor": null,
+      },
+      undefined,
+    ]
+  }
+/>
+`;
+
+exports[`ThemedView should merge custom styles with themed background color 1`] = `
+<View
+  style={
+    [
+      {
+        "backgroundColor": "white",
+      },
+      {
+        "margin": 5,
+        "padding": 10,
+      },
+    ]
+  }
+/>
+`;
+
+exports[`ThemedView should render correctly with default props 1`] = `
+<View
+  style={
+    [
+      {
+        "backgroundColor": "white",
+      },
+      undefined,
+    ]
+  }
+/>
 `;

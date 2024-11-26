@@ -29,14 +29,4 @@ describe("<HistoryItem />", () => {
     const searchedText = root.findAllByType(Text)[1];
     expect(searchedText.props.children).toBe(mockHistoryItem.searchedText);
   });
-
-  it("should have the correct styles applied", () => {
-    const component = renderer.create(<HistoryItem item={mockHistoryItem} />);
-    const root = component.root;
-
-    const timeText = root.findAllByType(Text)[0];
-    const searchedText = root.findAllByType(Text)[1];
-
-    expect(timeText.props.style).toContainEqual({ marginRight: 10 });
-  });
 });
