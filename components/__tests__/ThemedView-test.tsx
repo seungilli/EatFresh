@@ -7,7 +7,7 @@ jest.mock("@/hooks/useThemeColor", () => ({
   useThemeColor: jest.fn(),
 }));
 
-describe("ThemedView", () => {
+describe("<ThemedView />", () => {
   it("should render correctly with default props", () => {
     (useThemeColor as jest.Mock).mockReturnValue("white");
 

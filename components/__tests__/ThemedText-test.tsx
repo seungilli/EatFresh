@@ -2,7 +2,7 @@ import * as React from "react";
 import renderer from "react-test-renderer";
 import { ThemedText } from "../ThemedText";
 
-describe("ThemedText component", () => {
+describe("<ThemedText />", () => {
   it("should render with default styles", () => {
     const tree = renderer
       .create(<ThemedText>Default text</ThemedText>)

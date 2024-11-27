@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ThemedView should apply the correct background color from darkColor 1`] = `
+exports[`<ThemedView /> should apply the correct background color from darkColor 1`] = `
 <View
   style={
     [
@@ -13,7 +13,7 @@ exports[`ThemedView should apply the correct background color from darkColor 1`]
 />
 `;
 
-exports[`ThemedView should apply the correct background color from lightColor 1`] = `
+exports[`<ThemedView /> should apply the correct background color from lightColor 1`] = `
 <View
   style={
     [
@@ -26,7 +26,7 @@ exports[`ThemedView should apply the correct background color from lightColor 1`
 />
 `;
 
-exports[`ThemedView should handle undefined lightColor and darkColor gracefully 1`] = `
+exports[`<ThemedView /> should handle undefined lightColor and darkColor gracefully 1`] = `
 <View
   style={
     [
@@ -39,7 +39,7 @@ exports[`ThemedView should handle undefined lightColor and darkColor gracefully 
 />
 `;
 
-exports[`ThemedView should merge custom styles with themed background color 1`] = `
+exports[`<ThemedView /> should merge custom styles with themed background color 1`] = `
 <View
   style={
     [
@@ -55,7 +55,7 @@ exports[`ThemedView should merge custom styles with themed background color 1`] 
 />
 `;
 
-exports[`ThemedView should render correctly with default props 1`] = `
+exports[`<ThemedView /> should render correctly with default props 1`] = `
 <View
   style={
     [
