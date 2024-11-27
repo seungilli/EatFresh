@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import WarningIcon from "@/assets/icons/WarningIcon ";
-import LeafIcon from "@/assets/icons/leaf_icon";
+import LeafIcon from "@/assets/icons/LeafIcon";
 import { Colors } from "@/constants/Colors";
 
 const styles = StyleSheet.create({

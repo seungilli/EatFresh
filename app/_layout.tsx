@@ -14,7 +14,7 @@ import "react-native-reanimated";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { FavoritesProvider } from "@/hooks/useFavoritesProvider";
 import { HistoryProvider } from "@/hooks/useHistoryProvider";
-import LeafIcon from "@/assets/icons/leaf_icon";
+import LeafIcon from "@/assets/icons/LeafIcon";
 import { Colors } from "@/constants/Colors";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
